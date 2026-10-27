@@ -66,12 +66,19 @@ def get_video_info():
         "skip_download": True,
         "quiet": True,
         "no_warnings": True,
-        "extract_flat": False,
+        "noplaylist": True,
+        "socket_timeout": 15,
+        "extractor_args": {
+            "youtube": {
+                "player_client": ["web", "mweb", "android"]
+            }
+        }
     }
     if FFMPEG_LOC:
         ydl_opts["ffmpeg_location"] = FFMPEG_LOC
 
     try:
+        logging.info(f"Extracting info for URL: {url}")
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
             
@@ -136,8 +143,15 @@ def download_audio():
     ydl_opts = {
         "format": "bestaudio/best",
         "outtmpl": output_template,
+        "noplaylist": True,
+        "socket_timeout": 30,
         "quiet": True,
         "no_warnings": True,
+        "extractor_args": {
+            "youtube": {
+                "player_client": ["web", "mweb", "android"]
+            }
+        },
         "postprocessors": [
             {
                 "key": "FFmpegExtractAudio",

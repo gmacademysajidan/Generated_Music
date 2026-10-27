@@ -71,7 +71,7 @@
       
       <div class="converter-inner">
         <!-- URL Input Component -->
-        <form id="urlForm" class="modern-input-group">
+        <form id="urlForm" class="modern-input-group" onsubmit="return false;" action="javascript:void(0);">
           <div class="input-field-wrapper">
             <div class="input-leading-icon">
               <i class="fa-brands fa-youtube"></i>
@@ -95,7 +95,7 @@
             </div>
           </div>
 
-          <button type="submit" id="fetchBtn" class="btn-execute">
+          <button type="button" id="fetchBtn" class="btn-execute">
             <span class="btn-inner-content">
               <span class="btn-text">
                 <i class="fa-solid fa-bolt"></i> Analisis Link

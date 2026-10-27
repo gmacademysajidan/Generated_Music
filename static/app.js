@@ -122,10 +122,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 7. Form Submit
+  // 7. Form Submit & Key Listener
   urlForm.addEventListener('submit', (e) => {
     e.preventDefault();
     triggerFetch();
+    return false;
+  });
+
+  fetchBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    triggerFetch();
+  });
+
+  urlInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      triggerFetch();
+    }
   });
 
   // 8. Fetch Video Information

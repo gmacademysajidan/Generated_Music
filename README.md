@@ -1,3 +1,12 @@
+---
+title: Generated Music
+emoji: 🎵
+colorFrom: indigo
+colorTo: pink
+sdk: docker
+app_port: 7860
+---
+
 # YouTube to MP3 Music Downloader 🎵
 
 Aplikasi web modern untuk mengunduh lagu / audio dari link YouTube langsung ke format **MP3** dengan pilihan kualitas bitrate.
@@ -11,12 +20,3 @@ Aplikasi web modern untuk mengunduh lagu / audio dari link YouTube langsung ke f
    - **128 kbps (Light)**: Ukuran file kecil & proses paling cepat.
 3. **Konverter Otomatis**: Dilengkapi dengan FFmpeg versi lengkap yang langsung mengonversi audio ke file `.mp3` murni beserta metadata judul lagu.
 4. **Desain Modern & Responsif**: Tampilan bertema gelap (Dark Glassmorphism) yang elegan di PC maupun HP / Smartphone.
-
-## 🚀 Cara Menjalankan
-1. Klik dua kali file [`run.bat`](file:///c:/generator_music/run.bat) atau jalankan perintah:
-   ```bash
-   py app.py
-   ```
-2. Buka browser dan akses:
-   [http://localhost:5000](http://localhost:5000)
-3. Masukkan link YouTube, pilih kualitas audio, dan klik **Unduh MP3 Sekarang**!
