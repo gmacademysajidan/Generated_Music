@@ -20,8 +20,12 @@ FFMPEG_PATH = os.path.join(BIN_DIR, "ffmpeg.exe")
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 os.makedirs(BIN_DIR, exist_ok=True)
 
-# Add BIN_DIR to PATH so yt-dlp finds ffmpeg and ffprobe automatically
-os.environ["PATH"] = BIN_DIR + os.pathsep + os.environ.get("PATH", "")
+# Add BIN_DIR to PATH if local ffmpeg exists
+if os.path.exists(FFMPEG_PATH):
+    os.environ["PATH"] = BIN_DIR + os.pathsep + os.environ.get("PATH", "")
+    FFMPEG_LOC = BIN_DIR
+else:
+    FFMPEG_LOC = None
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 
@@ -62,9 +66,10 @@ def get_video_info():
         "skip_download": True,
         "quiet": True,
         "no_warnings": True,
-        "ffmpeg_location": BIN_DIR,
         "extract_flat": False,
     }
+    if FFMPEG_LOC:
+        ydl_opts["ffmpeg_location"] = FFMPEG_LOC
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -76,10 +81,12 @@ def get_video_info():
 
             duration = info.get("duration", 0)
             # Check duration limit (optional warning if over 3 hours)
-            if duration and duration > 14400: # 4 hours
+            max_duration = int(os.environ.get("MAX_DURATION_SECONDS", 14400))
+            if duration and duration > max_duration:
+                hours = max_duration // 3600
                 return jsonify({
                     "success": False, 
-                    "error": "Durasi video terlalu panjang (> 4 jam). Silakan pilih video yang lebih pendek."
+                    "error": f"Durasi video terlalu panjang (> {hours} jam). Silakan pilih video yang lebih pendek."
                 }), 400
 
             response_data = {
@@ -129,7 +136,6 @@ def download_audio():
     ydl_opts = {
         "format": "bestaudio/best",
         "outtmpl": output_template,
-        "ffmpeg_location": BIN_DIR,
         "quiet": True,
         "no_warnings": True,
         "postprocessors": [
@@ -144,6 +150,8 @@ def download_audio():
             }
         ],
     }
+    if FFMPEG_LOC:
+        ydl_opts["ffmpeg_location"] = FFMPEG_LOC
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
