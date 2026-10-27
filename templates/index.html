@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube to MP3 Music Downloader</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="background-glow">
+    <div class="glow-circle glow-1"></div>
+    <div class="glow-circle glow-2"></div>
+    <div class="glow-circle glow-3"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="badge-tag">
+        <i class="fa-solid fa-music"></i>
+        <span>Audio Studio & Converter</span>
+      </div>
+      <h1 class="main-title">
+        YouTube <span class="gradient-text">to MP3</span> Converter
+      </h1>
+      <p class="subtitle">
+        Cukup paste link video YouTube, pilih kualitas audio yang diinginkan, dan unduh lagu favoritmu secara instan dalam format MP3 berkualitas tinggi.
+      </p>
+    </header>
+
+    <!-- Search / URL Input Card -->
+    <div class="card search-card">
+      <form id="urlForm" class="search-form">
+        <div class="input-wrapper">
+          <i class="fa-brands fa-youtube input-icon"></i>
+          <input 
+            type="text" 
+            id="urlInput" 
+            placeholder="Paste link YouTube di sini (contoh: https://www.youtube.com/watch?v=...)" 
+            autocomplete="off"
+            required
+          />
+          <button type="button" id="pasteBtn" class="action-btn" title="Paste dari clipboard">
+            <i class="fa-regular fa-clipboard"></i>
+          </button>
+          <button type="button" id="clearBtn" class="action-btn hidden" title="Hapus teks">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <button type="submit" id="fetchBtn" class="btn btn-primary">
+          <span class="btn-text"><i class="fa-solid fa-bolt"></i> Cek Video</span>
+          <span class="btn-loader hidden"><i class="fa-solid fa-spinner fa-spin"></i> Memproses...</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Alert / Toast Messages -->
+    <div id="alertBox" class="alert-box hidden">
+      <i class="alert-icon fa-solid fa-circle-exclamation"></i>
+      <span class="alert-text">Pesan error atau info</span>
+    </div>
+
+    <!-- Result / Quality Selection Section -->
+    <div id="resultSection" class="result-section hidden">
+      <div class="card media-card">
+        <div class="media-preview">
+          <div class="thumbnail-wrapper">
+            <img id="mediaThumb" src="" alt="Thumbnail" />
+            <span id="mediaDuration" class="duration-badge">00:00</span>
+          </div>
+          <div class="media-details">
+            <h2 id="mediaTitle" class="media-title">Judul Video YouTube</h2>
+            <p id="mediaAuthor" class="media-author">
+              <i class="fa-solid fa-circle-user"></i> <span>Channel Name</span>
+            </p>
+            <div class="media-meta">
+              <span id="mediaViews"><i class="fa-solid fa-eye"></i> 0 views</span>
+              <span class="meta-dot">•</span>
+              <span id="mediaFormatBadge"><i class="fa-solid fa-file-audio"></i> MP3 Ready</span>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Quality Selection -->
+        <div class="options-container">
+          <h3 class="options-title">
+            <i class="fa-solid fa-sliders"></i> Pilih Kualitas Audio MP3:
+          </h3>
+          
+          <div class="quality-grid">
+            <label class="quality-card active">
+              <input type="radio" name="audioQuality" value="320" checked>
+              <div class="card-content">
+                <div class="quality-header">
+                  <span class="quality-badge badge-hq">Ultra HD</span>
+                  <i class="fa-solid fa-circle-check check-icon"></i>
+                </div>
+                <div class="bitrate">320 kbps</div>
+                <div class="quality-desc">Kualitas audio terbaik, sangat jernih</div>
+              </div>
+            </label>
+
+            <label class="quality-card">
+              <input type="radio" name="audioQuality" value="256">
+              <div class="card-content">
+                <div class="quality-header">
+                  <span class="quality-badge badge-pro">High</span>
+                  <i class="fa-solid fa-circle-check check-icon"></i>
+                </div>
+                <div class="bitrate">256 kbps</div>
+                <div class="quality-desc">Kualitas tinggi & detail suara optimal</div>
+              </div>
+            </label>
+
+            <label class="quality-card">
+              <input type="radio" name="audioQuality" value="192">
+              <div class="card-content">
+                <div class="quality-header">
+                  <span class="quality-badge badge-std">Standar</span>
+                  <i class="fa-solid fa-circle-check check-icon"></i>
+                </div>
+                <div class="bitrate">192 kbps</div>
+                <div class="quality-desc">Kualitas standar seimbang & ukuran hemat</div>
+              </div>
+            </label>
+
+            <label class="quality-card">
+              <input type="radio" name="audioQuality" value="128">
+              <div class="card-content">
+                <div class="quality-header">
+                  <span class="quality-badge badge-fast">Ringan</span>
+                  <i class="fa-solid fa-circle-check check-icon"></i>
+                </div>
+                <div class="bitrate">128 kbps</div>
+                <div class="quality-desc">Ukuran file kecil, proses paling cepat</div>
+              </div>
+            </label>
+          </div>
+
+          <!-- Action Download Button -->
+          <div class="action-footer">
+            <button id="downloadBtn" class="btn btn-download">
+              <i class="fa-solid fa-download"></i> Unduh MP3 Sekarang
+            </button>
+          </div>
+
+          <!-- Progress bar -->
+          <div id="progressContainer" class="progress-container hidden">
+            <div class="progress-status">
+              <span id="progressText"><i class="fa-solid fa-gear fa-spin"></i> Mengunduh & mengonversi audio ke MP3...</span>
+              <span id="progressPercent">Harap tunggu sebentar</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="progressBar" class="progress-bar-fill indeterminate"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Features -->
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+        <h3>Otomatis Terdeteksi</h3>
+        <p>Cukup paste link, sistem langsung membaca informasi lagu dan menyediakan pilihan kualitas MP3.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fa-solid fa-headphones"></i></div>
+        <h3>Audio High Quality</h3>
+        <p>Mendukung bitrate hingga 320 kbps untuk mendengarkan lagu dengan kejernihan maksimal.</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <h3>Cepat & Tanpa Iklan</h3>
+        <p>Download langsung disimpan ke perangkat Anda secara aman, instan, dan bebas gangguan.</p>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>YouTube to MP3 Music Downloader &copy; 2026. Made for music lovers.</p>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
